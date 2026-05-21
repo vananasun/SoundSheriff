@@ -1,8 +1,6 @@
 # SoundSheriff
 
-SoundSheriff adds a Windows Explorer context menu for common audio and video
-file operations. Right-click a supported media file, open the `SoundSheriff`
-menu, and convert, extract, resample, normalize, or collapse audio to mono.
+SoundSheriff lets you convert, normalize, extract, resample, and mono-mix media files straight from Windows Explorer using simple right-click actions.
 
 ![SoundSheriff demo](assets/demo.gif)
 
