@@ -30,21 +30,6 @@ Video audio-extraction entries are registered for:
 ## Install
 
 Download the latest `SoundSheriffSetup.exe` from the project releases and run it.
-The installer requires administrator privileges because it writes Explorer
-context menu entries under `HKEY_LOCAL_MACHINE`.
-
-The installer installs to:
-
-```text
-C:\Program Files\SoundSheriff
-```
-
-That path is intentional. `context_menu.reg` currently contains absolute command
-paths for `C:\Program Files\SoundSheriff`, so the installer is locked to that
-directory and targets 64-bit Windows.
-
-After installation, right-click a supported media file and choose
-`SoundSheriff`.
 
 ## How it works
 
