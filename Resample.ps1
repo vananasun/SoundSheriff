@@ -3,27 +3,15 @@ $InputFile = $args[0]
 
 . "$PSScriptRoot\SoundSheriff.Tools.ps1"
 
-$InputExt  = [System.IO.Path]::GetExtension($InputFile)
-$InputName = [System.IO.Path]::GetFileNameWithoutExtension($InputFile)
-$InputDir  = Split-Path $InputFile
-
-
 $SampleRate = $args[1]
 
-
-$OutputFile = Join-Path $InputDir "$InputName ($SampleRate Hz)$InputExt"
-
-
+$OutputFile = Get-SoundSheriffOutputPath -InputFile $InputFile -Suffix " ($SampleRate Hz)"
 
 Write-Output "Input:  $InputFile"
 Write-Output "Output: $OutputFile"
 
 
-$Options = "-af aresample=resampler=soxr -ar $($args[1])"
-
-$Options = "$Options -map_metadata 0"
-$OptionArray = $Options -split ' '    # split into array for & invocation
+$Options = @("-af", "aresample=resampler=soxr", "-ar", $SampleRate, "-map_metadata", "0")
 
 # Run FFmpeg
-& $FFmpeg -y -i $InputFile $OptionArray $OutputFile
-
+& $FFmpeg -y -i $InputFile $Options $OutputFile

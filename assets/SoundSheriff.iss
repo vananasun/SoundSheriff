@@ -23,6 +23,7 @@ Source: "..\Mono.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Normalize.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Resample.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\SoundSheriff.Tools.ps1"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Diagnose-SoundSheriff.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "sheriff.ico"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "sheriff.png"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "..\bin\ffmpeg.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
@@ -38,6 +39,7 @@ Filename: "{cmd}"; Parameters: "/c reg delete ""HKLM\SOFTWARE\Classes\SystemFile
 Filename: "{cmd}"; Parameters: "/c reg delete ""HKLM\SOFTWARE\Classes\SystemFileAssociations\.aiff\shell\Convert"" /f"; Flags: runhidden; RunOnceId: "delete-aiff-convert"
 Filename: "{cmd}"; Parameters: "/c reg delete ""HKLM\SOFTWARE\Classes\SystemFileAssociations\.flac\shell\Convert"" /f"; Flags: runhidden; RunOnceId: "delete-flac-convert"
 Filename: "{cmd}"; Parameters: "/c reg delete ""HKLM\SOFTWARE\Classes\SystemFileAssociations\.mp3\shell\Convert"" /f"; Flags: runhidden; RunOnceId: "delete-mp3-convert"
+Filename: "{cmd}"; Parameters: "/c reg delete ""HKLM\SOFTWARE\Classes\SystemFileAssociations\.wma\shell\Convert"" /f"; Flags: runhidden; RunOnceId: "delete-wma-convert"
 Filename: "{cmd}"; Parameters: "/c reg delete ""HKLM\SOFTWARE\Classes\SystemFileAssociations\.opus\shell\Convert"" /f"; Flags: runhidden; RunOnceId: "delete-opus-convert"
 Filename: "{cmd}"; Parameters: "/c reg delete ""HKLM\SOFTWARE\Classes\SystemFileAssociations\.ogg\shell\Convert"" /f"; Flags: runhidden; RunOnceId: "delete-ogg-convert"
 Filename: "{cmd}"; Parameters: "/c reg delete ""HKLM\SOFTWARE\Classes\SystemFileAssociations\.aac\shell\Convert"" /f"; Flags: runhidden; RunOnceId: "delete-aac-convert"

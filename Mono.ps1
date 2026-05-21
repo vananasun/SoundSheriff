@@ -12,22 +12,17 @@ $InputFile = $args[0]
 
 . "$PSScriptRoot\SoundSheriff.Tools.ps1"
 
-$InputExt  = [System.IO.Path]::GetExtension($InputFile)
-$InputName = [System.IO.Path]::GetFileNameWithoutExtension($InputFile)
-$InputDir  = Split-Path $InputFile
-
 # Build output filename (append " (mono)")
-$OutputFile = Join-Path $InputDir "$InputName (mono)$InputExt"
+$OutputFile = Get-SoundSheriffOutputPath -InputFile $InputFile -Suffix " (mono)"
 
 Write-Output "Converting to mono:"
 Write-Output "Input:  $InputFile"
 Write-Output "Output: $OutputFile"
 
 # FFmpeg options
-$Options = "-ac 1 -map_metadata 0"   # mono + preserve metadata
-$OptionArray = $Options -split ' '    # split into array for & invocation
+$Options = @("-ac", "1", "-map_metadata", "0")   # mono + preserve metadata
 
 # Run FFmpeg
-& $FFmpeg -y -i $InputFile $OptionArray $OutputFile
+& $FFmpeg -y -i $InputFile $Options $OutputFile
 
 #Pause

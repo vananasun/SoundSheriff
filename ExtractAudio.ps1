@@ -2,6 +2,8 @@ $InputFile = $args[0]
 
 . "$PSScriptRoot\SoundSheriff.Tools.ps1"
 
+$Options = @()
+
 # force extract as given extension
 if ($args.Count -ge 2) {
 
@@ -30,12 +32,12 @@ if ($args.Count -ge 2) {
 
         # Default to encode to a FLAC
         $Ext = "flac"
-        $Options = "-vn -c:a flac -compression_level 12"
+        $Options = @("-vn", "-c:a", "flac", "-compression_level", "12")
 
     } else {
 
         # Extract without re-encoding
-        $Options = "-vn -acodec copy"
+        $Options = @("-vn", "-acodec", "copy")
 
     }
 }
@@ -43,9 +45,6 @@ if ($args.Count -ge 2) {
 Write-Host "Codec: $Codec"
 Write-Host "Extension: .$Ext"
 
-$OutputFile = [System.IO.Path]::Combine(
-    (Split-Path $InputFile), 
-    "$([System.IO.Path]::GetFileNameWithoutExtension($InputFile)).$Ext"
-)
+$OutputFile = Get-SoundSheriffOutputPath -InputFile $InputFile -Extension $Ext
 
-& $FFmpeg -y -i $InputFile $($Options -split ' ') $OutputFile
+& $FFmpeg -y -i $InputFile $Options $OutputFile

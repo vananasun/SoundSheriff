@@ -11,12 +11,10 @@ if (-not (Test-Path $InputFile)) {
 . "$PSScriptRoot\SoundSheriff.Tools.ps1"
 
 # Paths
-$InputDir  = Split-Path $InputFile
-$InputName = [System.IO.Path]::GetFileNameWithoutExtension($InputFile)
 $InputExt  = [System.IO.Path]::GetExtension($InputFile)
 
 # Output file
-$OutputFile = Join-Path $InputDir "$InputName (-14 LUFS)$InputExt"
+$OutputFile = Get-SoundSheriffOutputPath -InputFile $InputFile -Suffix " (-14 LUFS)"
 
 Write-Host "Input:  $InputFile"
 Write-Host "Output: $OutputFile"
@@ -82,4 +80,4 @@ Write-Host $ffmpegArgs
 & $FFmpeg @ffmpegArgs
 
 Write-Host "Done! Output file: $OutputFile"
-Pause
+# Pause

@@ -4,14 +4,13 @@ $OutputExt = $args[1]
 . "$PSScriptRoot\SoundSheriff.Tools.ps1"
 
 
+$Options = @()
 
 if ($OutputExt.Equals("wav")) {
 
     if ($args.Count -ge 3) {
 
-        $Key   = ($args[2] -split "=")[0]
-        $Value = ($args[2] -split "=")[1]
-        $Options = ""
+        $Options = @()
 
     } else {
 
@@ -33,57 +32,49 @@ if ($OutputExt.Equals("wav")) {
         
         Write-Output "Detected format: $SampleFmt  codec $Codec"
 
-        $Options = "-c:a $Codec"
+        $Options = @("-c:a", $Codec)
 
 
     }
 }
 
 elseif ($OutputExt.Equals("aiff")) {
-    #$Options = ""
+    $Options = @()
 }
 
 elseif ($OutputExt.Equals("flac")) {
-    $Options = "-c:a flac -compression_level 12"
+    $Options = @("-c:a", "flac", "-compression_level", "12")
 }
 
 if ($OutputExt.Equals("mp3")) {
-    $Options = "-codec:a libmp3lame"
+    $Options = @("-codec:a", "libmp3lame")
     
-    $Key   = ($args[2] -split "=")[0]
-    $Value = ($args[2] -split "=")[1]
-    switch ($Key) {
+    $Option = Split-SoundSheriffOption $args[2]
+    switch ($Option.Key) {
         "vbr" {
-            $Options = "$Options -qscale:a $Value"
+            $Options += @("-qscale:a", $Option.Value)
         }
         "cbr" {
-            $Options = "$Options -b:a ${Value}k"
+            $Options += @("-b:a", "$($Option.Value)k")
         }
     }
 }
 
 elseif ($OutputExt.Equals("ogg")) {
-    $Options = "-c:a libvorbis -qscale:a 10"
+    $Options = @("-c:a", "libvorbis", "-qscale:a", "10")
 }
 
 elseif ($OutputExt.Equals("opus")) {
-    $Options = "-c:a libopus -vbr on -compression_level 10"
+    $Options = @("-c:a", "libopus", "-vbr", "on", "-compression_level", "10")
 }
 
 elseif ($OutputExt.Equals("aac")) {
-    $Options = "-c:a aac -b:a 256k"
+    $Options = @("-c:a", "aac", "-b:a", "256k")
 }
 
-$Options = "$Options -map_metadata 0"
+$Options += @("-map_metadata", "0")
 
-
-
-
-$OutputFile = [System.IO.Path]::Combine(
-    (Split-Path $InputFile), 
-    "$([System.IO.Path]::GetFileNameWithoutExtension($InputFile)).$OutputExt"
-)
-
-& $FFmpeg -y -i $InputFile $($Options -split ' ') $OutputFile
+$OutputFile = Get-SoundSheriffOutputPath -InputFile $InputFile -Extension $OutputExt
+& $FFmpeg -y -i $InputFile $Options $OutputFile
 
 #Pause
