@@ -48,8 +48,7 @@ After installation, right-click a supported media file and choose
 
 ## How it works
 
-SoundSheriff adds Windows registry entries for the context menu pointing to PowerShell scripts. The scripts invoke bundled FFmpeg command-line binaries
-for the actual media work.
+SoundSheriff adds custom Explorer context menu entries through the Windows registry. Each menu action runs a PowerShell script invoking FFmpeg commandline binaries for the actual processing.
 
 ## Development Setup
 
