@@ -1,0 +1,22 @@
+# Test media and local experiments
+/test/
+/TODO.txt
+
+# Bundled third-party binaries are downloaded for local builds.
+/bin/*.exe
+
+# Installer outputs and install leftovers
+/dist/
+/downloads/
+/unins000.*
+
+# Python/Cython/PyInstaller build outputs
+__pycache__/
+*.py[cod]
+*.pyd
+*.obj
+*.lib
+*.exp
+/bpm/build/
+/bpm/dist/
+/bpm/bpm.c

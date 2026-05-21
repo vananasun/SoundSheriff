@@ -1,0 +1,24 @@
+SoundSheriff bundles FFmpeg command-line binaries for Windows.
+
+Bundled version:
+8.1.1-essentials_build-www.gyan.dev
+
+Binary package:
+https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip
+
+Build provider page:
+https://www.gyan.dev/ffmpeg/builds/
+
+FFmpeg source commit:
+https://github.com/FFmpeg/FFmpeg/commit/239f2c733d
+
+Downloaded archive SHA256:
+6F58CE889F59C311410F7D2B18895B33C03456463486F3B1EBC93D97A0F54541
+
+Local FFmpeg changes:
+No local FFmpeg changes.
+
+Bundled license/readme files:
+
+- FFmpeg-LICENSE.txt
+- FFmpeg-README.txt
