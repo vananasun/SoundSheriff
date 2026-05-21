@@ -1,4 +1,4 @@
-# SoundSheriff
+# SoundSheriff 👮‍♂️
 
 SoundSheriff lets you convert, normalize, extract, resample, and mono-mix media files straight from Windows Explorer using simple right-click actions.
 
