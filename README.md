@@ -1,6 +1,6 @@
 # SoundSheriff 👮‍♂️
 
-SoundSheriff lets you convert, normalize, extract, resample, and mono-mix media files straight from Windows Explorer using simple right-click actions.
+Convert audio and extract sound from videos directly from Windows right-click. No uploads. No confusing apps. No subscriptions.
 
 ![SoundSheriff demo](assets/demo.gif)
 
@@ -30,6 +30,8 @@ Video audio-extraction entries are registered for:
 ## Install
 
 Download the latest `SoundSheriffSetup.exe` from the project releases and run it.
+The installer supports English, Dutch, German, and French. Context menu labels are
+written in the language selected during installation.
 
 ## How it works
 

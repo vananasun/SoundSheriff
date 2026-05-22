@@ -15,6 +15,12 @@ SolidCompression=yes
 OutputBaseFilename=SoundSheriffSetup
 OutputDir=..\dist
 
+[Languages]
+Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "dutch"; MessagesFile: "compiler:Languages\Dutch.isl"
+Name: "german"; MessagesFile: "compiler:Languages\German.isl"
+Name: "french"; MessagesFile: "compiler:Languages\French.isl"
+
 [Files]
 Source: "..\context_menu.reg"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Convert.ps1"; DestDir: "{app}"; Flags: ignoreversion
@@ -24,6 +30,7 @@ Source: "..\Normalize.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Resample.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\SoundSheriff.Tools.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Diagnose-SoundSheriff.ps1"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Localize-SoundSheriffContextMenu.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "sheriff.ico"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "sheriff.png"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "..\bin\ffmpeg.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
@@ -33,6 +40,7 @@ Source: "..\licenses\*"; DestDir: "{app}\licenses"; Flags: ignoreversion recurse
 
 [Run]
 Filename: "{cmd}"; Parameters: "/c reg import ""{app}\context_menu.reg"""; Flags: runhidden
+Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\Localize-SoundSheriffContextMenu.ps1"" -Language ""{language}"""; Flags: runhidden
 
 [UninstallRun]
 Filename: "{cmd}"; Parameters: "/c reg delete ""HKLM\SOFTWARE\Classes\SystemFileAssociations\.wav\shell\Convert"" /f"; Flags: runhidden; RunOnceId: "delete-wav-convert"
