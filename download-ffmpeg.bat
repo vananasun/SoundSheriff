@@ -2,4 +2,4 @@
 setlocal
 
 cd /d "%~dp0"
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0download-ffmpeg.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0src\download-ffmpeg.ps1"

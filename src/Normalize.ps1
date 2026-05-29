@@ -2,10 +2,13 @@
 # Two-pass loudnorm normalization
 # ------------------------------
 
+if ($args.Count -lt 1) {
+    throw "Expected input file."
+}
+
 $InputFile = $args[0]
-if (-not (Test-Path $InputFile)) {
-    Write-Error "Input file not found: $InputFile"
-    exit 1
+if (-not (Test-Path -LiteralPath $InputFile)) {
+    throw "Input file not found: $InputFile"
 }
 
 . "$PSScriptRoot\SoundSheriff.Tools.ps1"
@@ -16,8 +19,8 @@ $InputExt  = [System.IO.Path]::GetExtension($InputFile)
 # Output file
 $OutputFile = Get-SoundSheriffOutputPath -InputFile $InputFile -Suffix " (-14 LUFS)"
 
-Write-Host "Input:  $InputFile"
-Write-Host "Output: $OutputFile"
+Write-SoundSheriffLog "Input:  $InputFile"
+Write-SoundSheriffLog "Output: $OutputFile"
 
 # --- First pass: measure loudness ---
 $TargetLUFS = "-14"
@@ -27,14 +30,12 @@ $LRA        = "11" #dummy, won't actually be used, otherwise ffmpeg switches to 
 $Filter1 = "loudnorm=I=${TargetLUFS}:TP=${TruePeak}:LRA=${LRA}:print_format=json"
 
 # Run ffmpeg first pass and capture stderr (JSON is printed there)
-$ffmpegOutputText = & $FFmpeg -hide_banner -i $InputFile -af $Filter1 -f null - 2>&1 | Out-String
+$ffmpegOutputText = Invoke-SoundSheriffFFmpeg -Arguments @("-hide_banner", "-i", $InputFile, "-af", $Filter1, "-f", "null", "-") -InputFile $InputFile -ProgressStart 0 -ProgressEnd 50 -Status "Analyzing loudness" -CaptureOutput
 
 # Extract last JSON block
 $jsonMatches = [regex]::Matches($ffmpegOutputText, '\{[^\}]*\}')
 if ($jsonMatches.Count -eq 0) {
-    Write-Error "Could not find loudnorm JSON output"
-    Pause
-    exit 1
+    throw "Could not find loudnorm JSON output."
 }
 $loudnormJson = $jsonMatches[$jsonMatches.Count - 1].Value
 
@@ -47,13 +48,13 @@ $measured_LRA    = $loudnorm.input_lra
 $measured_thresh = $loudnorm.input_thresh
 $offset          = $loudnorm.target_offset
 
-Write-Host "Measured values:"
-Write-Host "Input Integrated: $measured_I LUFS"
-Write-Host "Input True Peak:  $measured_TP dBTP"
-Write-Host "Input LRA:        $measured_LRA LU"
-Write-Host "Input Threshold:  $measured_thresh LUFS"
-Write-Host "Target Offset:    $offset LU"
-Write-Host "\n"
+Write-SoundSheriffLog "Measured values:"
+Write-SoundSheriffLog "Input Integrated: $measured_I LUFS"
+Write-SoundSheriffLog "Input True Peak:  $measured_TP dBTP"
+Write-SoundSheriffLog "Input LRA:        $measured_LRA LU"
+Write-SoundSheriffLog "Input Threshold:  $measured_thresh LUFS"
+Write-SoundSheriffLog "Target Offset:    $offset LU"
+Write-SoundSheriffLog ""
 
 # --- Second pass: apply normalization ---
 $Filter2 = "loudnorm=I=${TargetLUFS}:TP=${TruePeak}:LRA=${measured_LRA}:" +
@@ -75,9 +76,8 @@ if ($InputExt -eq ".flac") {
 $ffmpegArgs += $OutputFile
 
 
-Write-Host "Running second pass..."
-Write-Host $ffmpegArgs
-& $FFmpeg @ffmpegArgs
+Write-SoundSheriffLog "Running second pass..."
+Write-SoundSheriffLog ($ffmpegArgs -join " ")
+Invoke-SoundSheriffFFmpeg -Arguments $ffmpegArgs -InputFile $InputFile -ProgressStart 50 -ProgressEnd 100 -Status "Writing normalized file"
 
-Write-Host "Done! Output file: $OutputFile"
-# Pause
+Write-SoundSheriffLog "Done! Output file: $OutputFile"

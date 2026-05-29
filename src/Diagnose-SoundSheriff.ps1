@@ -3,19 +3,33 @@ $ErrorActionPreference = "Continue"
 $InstallRoot = "C:\Program Files\SoundSheriff"
 $PowerShellPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
 $RequiredFiles = @(
-    "Convert.ps1",
-    "ExtractAudio.ps1",
-    "Mono.ps1",
-    "Normalize.ps1",
-    "Resample.ps1",
-    "SoundSheriff.Tools.ps1",
+    "src\CompressVideoDiscord.ps1",
+    "src\Convert.ps1",
+    "src\ConvertVideo.ps1",
+    "src\ExtractAudio.ps1",
+    "src\Mono.ps1",
+    "src\Normalize.ps1",
+    "src\Resample.ps1",
+    "src\SoundSheriff.Tools.ps1",
+    "src\SoundSheriff.UI.ps1",
+    "src\SoundSheriff.Runner.ps1",
+    "src\Localize-SoundSheriffContextMenu.ps1",
     "bin\ffmpeg.exe",
     "bin\ffprobe.exe",
     "assets\sheriff.ico"
 )
 $RegistryExtensions = @(
     ".wav", ".aiff", ".flac", ".mp3", ".wma", ".opus", ".ogg", ".aac", ".m4a",
-    ".mp4", ".avi", ".mov", ".webm"
+    ".mp4", ".avi", ".mov", ".webm", ".mkv"
+)
+$CommandChecks = @(
+    "Convert.WAV",
+    "Convert.Mono",
+    "Convert.Resample48000",
+    "Convert.NormalizeLUFS",
+    "Convert.VideoMP4",
+    "Convert.CompressDiscord",
+    "Convert.ExtractAudio"
 )
 
 function Write-Check {
@@ -81,6 +95,19 @@ foreach ($extension in $RegistryExtensions) {
     }
 
     Write-Check "Registry entry: $extension" $exists $detail
+}
+
+foreach ($commandName in $CommandChecks) {
+    $commandPath = "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\$commandName\command"
+    $exists = Test-Path -LiteralPath $commandPath
+    $command = $null
+
+    if ($exists) {
+        $command = Get-ItemPropertyValue -LiteralPath $commandPath -Name "(default)"
+    }
+
+    $usesUiWrapper = $exists -and $command -like "*\src\SoundSheriff.UI.ps1*"
+    Write-Check "Command uses progress window: $commandName" $usesUiWrapper $command
 }
 
 Write-Host ""

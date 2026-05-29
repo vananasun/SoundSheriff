@@ -1,6 +1,7 @@
 $ErrorActionPreference = "Stop"
 
-$ProjectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Split-Path -Parent $ScriptRoot
 $DownloadDir = Join-Path $ProjectRoot "downloads"
 $BinDir = Join-Path $ProjectRoot "bin"
 $LicenseDir = Join-Path $ProjectRoot "licenses"

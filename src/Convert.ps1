@@ -1,6 +1,14 @@
 ﻿$InputFile = $args[0]
 $OutputExt = $args[1]
 
+if ($args.Count -lt 2) {
+    throw "Expected input file and output extension."
+}
+
+if (-not (Test-Path -LiteralPath $InputFile)) {
+    throw "Input file not found: $InputFile"
+}
+
 . "$PSScriptRoot\SoundSheriff.Tools.ps1"
 
 
@@ -30,7 +38,7 @@ if ($OutputExt.Equals("wav")) {
             default { $Codec = "pcm_s16le" }
         }
         
-        Write-Output "Detected format: $SampleFmt  codec $Codec"
+        Write-SoundSheriffLog "Detected format: $SampleFmt  codec $Codec"
 
         $Options = @("-c:a", $Codec)
 
@@ -75,6 +83,4 @@ elseif ($OutputExt.Equals("aac")) {
 $Options += @("-map_metadata", "0")
 
 $OutputFile = Get-SoundSheriffOutputPath -InputFile $InputFile -Extension $OutputExt
-& $FFmpeg -y -i $InputFile $Options $OutputFile
-
-#Pause
+Invoke-SoundSheriffFFmpeg -Arguments (@("-y", "-i", $InputFile) + $Options + @($OutputFile)) -InputFile $InputFile -Status "Converting to .$OutputExt"
